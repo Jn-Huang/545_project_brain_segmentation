@@ -1,3 +1,9 @@
+# dataset
+kaggle_3m
+logs
+predictions
+.DS_store
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

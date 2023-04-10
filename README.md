@@ -14,13 +14,13 @@ pip install -r requirements.txt
 
 Dataset used for development and evaluation was made publicly available on Kaggle: [kaggle.com/mateuszbuda/lgg-mri-segmentation](https://www.kaggle.com/mateuszbuda/lgg-mri-segmentation). It contains MR images from [TCIA LGG collection](https://wiki.cancerimagingarchive.net/display/Public/TCGA-LGG) with segmentation masks approved by a board-certified radiologist at Duke University.
 
-Please download the dataset and place it as `./kaggle`.
+**Please download the dataset and place it as `./kaggle`.**
 
 
 
 ## Pipeline
 
-![pipeline](/Users/jinhuang/Desktop/pipeline.png)
+![pipeline](./images/pipeline.png)
 
 - Preprocessing: this step is done by function `data_loaders` in `dataset.py`. Load as follows
 
@@ -28,8 +28,8 @@ Please download the dataset and place it as `./kaggle`.
   loader_train, loader_valid = data_loaders(batch_size=16, workers=2, image_size=224, aug_scale=0.05, aug_angle=15)
   ```
 
-- Segmentation: We will try different models for segmentation
-- Postprocessing: 
+- Segmentation: We will try different models for segmentation.
+- Postprocessing: see https://github.com/Jn-Huang/545_project_brain_segmentation/blob/main/notebooks/data_pipeline.ipynb for a demo of our data processing pipeline. Contact Jin anytime if you have any problem.
 
 ## References
 

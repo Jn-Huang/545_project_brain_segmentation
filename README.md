@@ -29,7 +29,17 @@ Dataset used for development and evaluation was made publicly available on Kaggl
   ```
 
 - Segmentation: We will try different models for segmentation.
-- Postprocessing: see https://github.com/Jn-Huang/545_project_brain_segmentation/blob/main/notebooks/data_pipeline.ipynb for a demo of our data processing pipeline. Contact Jin anytime if you have any problem.
+- Postprocessing: this step is done by function `postprocess_per_volume` in `dataset.py`
+
+**Check out [this notebook](https://github.com/Jn-Huang/545_project_brain_segmentation/blob/main/notebooks/data_pipeline.ipynb) for a demo on our data processing pipeline. Contact Jin anytime if you have any problems.**
+
+
+
+## Training
+
+[Example training code on Unet](https://github.com/Jn-Huang/545_project_brain_segmentation/blob/main/unet_train.py) might be helpful to build your own training script.
+
+
 
 ## References
 

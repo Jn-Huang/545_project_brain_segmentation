@@ -3,6 +3,7 @@ kaggle_3m
 logs
 predictions
 .DS_store
+TCGA_*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

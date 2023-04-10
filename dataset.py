@@ -14,11 +14,11 @@ from torchvision.transforms import Compose
 from utils import crop_sample, pad_sample, resize_sample, normalize_volume
 
 
-def data_loaders(batch_size, workers, image_size, aug_scale, aug_angle):
-    dataset_train, dataset_valid = datasets("./kaggle_3m", image_size, aug_scale, aug_angle)
+def data_loaders(batch_size, workers, image_size, aug_scale, aug_angle, path="./kaggle_3m"):
+    dataset_train, dataset_valid = datasets(path, image_size, aug_scale, aug_angle)
 
-    def worker_init(worker_id):
-        np.random.seed(42 + worker_id)
+    # def worker_init(worker_id):
+    #     np.random.seed(42 + worker_id)
 
     loader_train = DataLoader(
         dataset_train,
@@ -26,14 +26,14 @@ def data_loaders(batch_size, workers, image_size, aug_scale, aug_angle):
         shuffle=True,
         drop_last=True,
         num_workers=workers,
-        worker_init_fn=worker_init,
+        # worker_init_fn=worker_init,
     )
     loader_valid = DataLoader(
         dataset_valid,
         batch_size=batch_size,
         drop_last=False,
         num_workers=workers,
-        worker_init_fn=worker_init,
+        # worker_init_fn=worker_init,
     )
 
     return loader_train, loader_valid
@@ -177,8 +177,8 @@ class BrainSegmentationDataset(Dataset):
             )
 
         v, m = self.volumes[patient]
-        image = v[slice_n]
-        mask = m[slice_n]
+        image = v[slice_n] # (224, 224, 3)
+        mask = m[slice_n] # (224, 224, 1)
 
         if self.transform is not None:
             image, mask = self.transform((image, mask))
@@ -209,7 +209,7 @@ class Scale(object):
         image = rescale(
             image,
             (scale, scale),
-            multichannel=True,
+            channel_axis=2,
             preserve_range=True,
             mode="constant",
             anti_aliasing=False,
@@ -218,7 +218,7 @@ class Scale(object):
             mask,
             (scale, scale),
             order=0,
-            multichannel=True,
+            channel_axis=2,
             preserve_range=True,
             mode="constant",
             anti_aliasing=False,

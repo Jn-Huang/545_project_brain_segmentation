@@ -18,6 +18,19 @@ Please download the dataset and place it as `./kaggle`.
 
 
 
+## Pipeline
+
+![pipeline](/Users/jinhuang/Desktop/pipeline.png)
+
+- Preprocessing: this step is done by function `data_loaders` in `dataset.py`. Load as follows
+
+  ```
+  loader_train, loader_valid = data_loaders(batch_size=16, workers=2, image_size=224, aug_scale=0.05, aug_angle=15)
+  ```
+
+- Segmentation: We will try different models for segmentation
+- Postprocessing: 
+
 ## References
 
 https://github.com/mateuszbuda/brain-segmentation-pytorch

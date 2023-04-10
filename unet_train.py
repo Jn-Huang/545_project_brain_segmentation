@@ -16,6 +16,7 @@ def train_validate():
     device = torch.device("cpu" if not torch.cuda.is_available() else "cuda:0")
     
     loader_train, loader_valid = data_loaders(batch_size, workers, image_size, aug_scale, aug_angle)
+    print(111)
     loaders = {"train": loader_train, "valid": loader_valid}
     
     unet = UNet(in_channels=BrainSegmentationDataset.in_channels, out_channels=BrainSegmentationDataset.out_channels)

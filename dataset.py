@@ -14,7 +14,7 @@ from torchvision.transforms import Compose
 from utils import crop_sample, pad_sample, resize_sample, normalize_volume
 
 
-def data_loaders(batch_size, workers, image_size, aug_scale, aug_angle, path="./kaggle_3m"):
+def data_loaders(batch_size=16, workers=2, image_size=224, aug_scale=0.05, aug_angle=15, path="./kaggle_3m"):
     dataset_train, dataset_valid = datasets(path, image_size, aug_scale, aug_angle)
 
     # def worker_init(worker_id):

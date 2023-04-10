@@ -4,6 +4,8 @@ logs
 predictions
 .DS_store
 TCGA_*
+dsc.png
+test*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

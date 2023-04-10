@@ -134,3 +134,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+models/segformer.ipynb
+models/experiments.ipynb

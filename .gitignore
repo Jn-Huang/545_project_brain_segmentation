@@ -6,6 +6,9 @@ predictions
 TCGA_*
 dsc.png
 test*
+sam*
+image*
+origin*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

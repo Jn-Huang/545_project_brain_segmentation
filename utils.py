@@ -37,7 +37,12 @@ def dsc_per_volume(validation_pred, validation_true, patient_slice_index):
 
 
 def postprocess_per_volume(
-    input_list, pred_list, true_list, patient_slice_index, patients
+    input_list,
+    pred_list,
+    true_list,
+    patient_slice_index,
+    patients,
+    use_postprocessing=True
 ):
     volumes = {}
     num_slices = np.bincount([p[0] for p in patient_slice_index])
@@ -47,7 +52,8 @@ def postprocess_per_volume(
         volume_pred = np.round(
             np.array(pred_list[index : index + num_slices[p]])
         ).astype(int)
-        volume_pred = largest_connected_component(volume_pred)
+        if not np.all(volume_pred == 0) and use_postprocessing:
+            volume_pred = largest_connected_component(volume_pred)
         volume_true = np.array(true_list[index : index + num_slices[p]])
         volumes[patients[p]] = (volume_in, volume_pred, volume_true)
         index += num_slices[p]

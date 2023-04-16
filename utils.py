@@ -4,12 +4,14 @@ from skimage.exposure import rescale_intensity
 from skimage.transform import resize
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg
+from scipy.ndimage.measurements import label
 
 
 def dsc(y_pred, y_true):
     """Dice Similarity Coefficient."""
     y_pred = np.round(y_pred).astype(int)
     y_true = np.round(y_true/255).astype(int)
+    y_pred = largest_connected_component(y_pred)
     return np.sum(y_pred[y_true == 1]) * 2.0 / (np.sum(y_pred) + np.sum(y_true))
 
 
@@ -45,6 +47,7 @@ def postprocess_per_volume(
         volume_pred = np.round(
             np.array(pred_list[index : index + num_slices[p]])
         ).astype(int)
+        volume_pred = largest_connected_component(volume_pred)
         volume_true = np.array(true_list[index : index + num_slices[p]])
         volumes[patients[p]] = (volume_in, volume_pred, volume_true)
         index += num_slices[p]
@@ -201,3 +204,30 @@ def outline(image, mask, color):
         if 0.0 < np.mean(mask[max(0, y - 1) : y + 2, max(0, x - 1) : x + 2]) < 1.0:
             image[max(0, y) : y + 1, max(0, x) : x + 1] = color
     return image
+
+
+def largest_connected_component(img):
+    """
+    Select the largest connected binary component in an image.
+    
+    Treats all zero values in the input image as background and all others as foreground.
+    The return value is an binary array of equal dimensions as the input array with TRUE
+    values where the largest connected component is situated.
+    
+    Parameters
+    ----------
+    img : array_like
+        An array containing connected objects. Will be cast to type numpy.bool.
+    
+    Returns
+    -------
+    binary_image : ndarray
+        The supplied binary image with only the largest connected component remaining.
+    """   
+    labeled_array, num_features = label(img)
+    component_sizes = [np.count_nonzero(labeled_array == label_idx) for label_idx in range(1, num_features + 1)]
+    largest_component_idx = np.argmax(component_sizes) + 1
+
+    out = np.zeros(img.shape, bool)  
+    out[labeled_array == largest_component_idx] = True
+    return out

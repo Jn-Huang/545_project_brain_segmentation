@@ -14,29 +14,58 @@ from torchvision.transforms import Compose
 from utils import crop_sample, pad_sample, resize_sample, normalize_volume
 
 
-def data_loaders(batch_size=16, workers=2, image_size=224, aug_scale=0.05, aug_angle=15, path="./kaggle_3m"):
-    dataset_train, dataset_valid = datasets(path, image_size, aug_scale, aug_angle)
+def data_loaders(batch_size=16,
+                 workers=2,
+                 image_size=224,
+                 aug_scale=0.05,
+                 aug_angle=15,
+                 path="./kaggle_3m",
+                 valid_only=False):
+    """
+    Returns data loaders for training and validation datasets.
+    ----------
+    batch_size : int
+        Batch size.
+    workers : int
+        Number of workers for data loading.
+    image_size : int
+        Size of the image after preprocessing.
+    aug_scale : float
+        Scale factor for data augmentation.
+    aug_angle : float
+        Rotation angle for data augmentation.
+    path : str
+        Path to the dataset.
+    valid_only : bool
+        If True, only the validation dataset is returned.
+    """
+    dataset_train, dataset_valid = datasets(path, image_size, aug_scale, aug_angle, valid_only)
 
-    # def worker_init(worker_id):
-    #     np.random.seed(42 + worker_id)
+    if (not valid_only):
+        loader_train = DataLoader(
+            dataset_train,
+            batch_size=batch_size,
+            shuffle=True,
+            drop_last=True,
+            num_workers=workers,
+        )
+        loader_valid = DataLoader(
+            dataset_valid,
+            batch_size=batch_size,
+            drop_last=False,
+            num_workers=workers,
+        )
 
-    loader_train = DataLoader(
-        dataset_train,
-        batch_size=batch_size,
-        shuffle=True,
-        drop_last=True,
-        num_workers=workers,
-        # worker_init_fn=worker_init,
-    )
-    loader_valid = DataLoader(
-        dataset_valid,
-        batch_size=batch_size,
-        drop_last=False,
-        num_workers=workers,
-        # worker_init_fn=worker_init,
-    )
+        return loader_train, loader_valid
+    else:
+        loader_valid = DataLoader(
+            dataset_valid,
+            batch_size=batch_size,
+            drop_last=False,
+            num_workers=workers,
+        )
 
-    return loader_train, loader_valid
+        return None, loader_valid
 
 
 def transforms(scale=None, angle=None, flip_prob=None):
@@ -52,20 +81,29 @@ def transforms(scale=None, angle=None, flip_prob=None):
     return Compose(transform_list)
 
 
-def datasets(images, image_size, aug_scale, aug_angle):
-    train = BrainSegmentationDataset(
-        images_dir=images,
-        subset="train",
-        image_size=image_size,
-        transform=transforms(scale=aug_scale, angle=aug_angle, flip_prob=0.5),
-    )
-    valid = BrainSegmentationDataset(
-        images_dir=images,
-        subset="validation",
-        image_size=image_size,
-        random_sampling=False,
-    )
-    return train, valid
+def datasets(images, image_size, aug_scale, aug_angle, valid_only):
+    if (not valid_only):
+        train = BrainSegmentationDataset(
+            images_dir=images,
+            subset="train",
+            image_size=image_size,
+            transform=transforms(scale=aug_scale, angle=aug_angle, flip_prob=0.5),
+        )
+        valid = BrainSegmentationDataset(
+            images_dir=images,
+            subset="validation",
+            image_size=image_size,
+            random_sampling=False,
+        )
+        return train, valid
+    else:
+        valid = BrainSegmentationDataset(
+            images_dir=images,
+            subset="validation",
+            image_size=image_size,
+            random_sampling=False,
+        )
+        return None, valid
 
 
 class BrainSegmentationDataset(Dataset):

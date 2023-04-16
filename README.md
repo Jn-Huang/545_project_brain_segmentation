@@ -22,13 +22,22 @@ Dataset used for development and evaluation was made publicly available on Kaggl
 
 ![pipeline](./images/pipeline.png)
 
-- Preprocessing: this step is done by function `data_loaders` in `dataset.py`. Load as follows
+- Preprocessing: this step is done by function `data_loaders` in `dataset.py`. Load both training set and validation set as follows
 
   ```
   loader_train, loader_valid = data_loaders(batch_size=16, workers=2, image_size=224, aug_scale=0.05, aug_angle=15)
   ```
 
+  or, load only validation set as
+
+  ```
+  _, loader_valid = data_loaders(batch_size=16, workers=2, image_size=224, aug_scale=0.05, aug_angle=15, valid_only=True)
+  ```
+
+  Loading both dataloader will take 10-20 minutes and loading only validation set will take 1-2 minutes.
+
 - Segmentation: We will try different models for segmentation.
+
 - Postprocessing: this step is done by function `postprocess_per_volume` in `dataset.py`
 
 **Check out [this notebook](https://github.com/Jn-Huang/545_project_brain_segmentation/blob/main/notebooks/data_pipeline.ipynb) for a demo on our data processing pipeline. Contact Jin anytime if you have any problems.**

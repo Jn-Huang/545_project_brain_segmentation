@@ -14,10 +14,12 @@ import torch
 from transformers import Swinv2Model
 from transformers import SwinModel
 import torchvision as vision
+import torch.nn.functional as F
+import torch.optim as optim
+#from torchmetrics.functional import Dice
 
 
 # In[2]:
-
 
 #%run dataset.ipynb
 #!ln -s ./545_project_brain_segmentation/dataset.py dataset.py
@@ -75,7 +77,6 @@ for i, data in enumerate(train_loaders, 0):
 # In[14]:
 
 
-import torch.nn.functional as F
 
 #Initial attempt was to create simple upsampling network (not convolution) to see if dimensions worked.
 #But it is better to use trainable parameters!
@@ -130,9 +131,6 @@ class Net(torch.nn.Module):
 
 # In[15]:
 
-
-import torch.optim as optim
-#from torchmetrics.functional import Dice
 
 #Train the custom upsampling layers 
 def train_validate(epochs):
@@ -195,37 +193,11 @@ def train_validate(epochs):
                             print(f'[{ep + 1}, {i + 1:5d}] training loss: {(sum(loss_train) / 30):.3f}')
 
 
-                # print statistics
-                #running_loss += loss.item()
-                #if i % 30 == 0: # print and run validation every 30 mini-batches! LOOK at my pytorch class nb
-                 #   print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 30:.3f}')
-                    ''' #TREAT validation as test set! so run separately like his github
-                    accuracy = 0
-                    test_loss = 0
-                        actual_model.eval()
-                        for images,labels in valid_loaders:
-                            #images,labels = images.to(device),labels.to(device)
-                            #First find output and loss
-                            output = model(inputs, output_hidden_states = True)
-                            out = output.last_hidden_state.detach().numpy()
-                            out = np.reshape(np.transpose(out,axes = (0,2,1)),(16,-1,8,8)) #Make shape be same as input image
-                            out = torch.from_numpy(out) #Convert to pytorch tensor
-                            out = SwinM(out)
-                            loss = criterion(out,labels)
-                            test_loss+=loss.item()
-                    #FIX WHAT IT'S PRINTING!!
-                    print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 30:.3f}')
-                    running_loss = 0.0
-                    '''
-
-
 # In[1]:
-
 
 train_validate(3)
 
-
-# In[ ]:
+#Ideally should define class and function first, and run dataloader creation + train/test in order in main in .py file
 
 
 

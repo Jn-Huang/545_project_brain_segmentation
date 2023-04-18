@@ -17,10 +17,17 @@ class CustomSegModel(nn.Module):
         #         kernel_size=1
         #     )
         # else:
+         # Freeze the transformer part parameters
         
         self.processor = SegformerImageProcessor(config)
         self.model = SegformerModel(config)
         self.decode_head = SegformerDecodeHead(config)
+        # for param in self.model.parameters():
+        #     param.requires_grad = False
+
+        # # Keep the decode_head part trainable
+        # for param in self.decode_head.parameters():
+        #     param.requires_grad = True
     
     def forward(self, images):
         inputs = self.processor(images, return_tensors="pt")

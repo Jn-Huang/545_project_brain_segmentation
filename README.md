@@ -2,7 +2,7 @@
 
 
 
-## Install (in a conda environment preferably)
+## Install
 
 ```
 pip install -r requirements.txt
@@ -40,7 +40,12 @@ Dataset used for development and evaluation was made publicly available on Kaggl
 
 - Postprocessing: this step is done by function `postprocess_per_volume` in `dataset.py`
 
-**Check out [this notebook](https://github.com/Jn-Huang/545_project_brain_segmentation/blob/main/notebooks/data_pipeline.ipynb) for a demo on our data processing pipeline. Contact Jin anytime if you have any problems.**
+
+
+## Instructions
+
+- **Check out [this notebook](https://github.com/Jn-Huang/545_project_brain_segmentation/blob/main/notebooks/data_pipeline.ipynb) for a demo on our data processing pipeline.**
+- This note book is using [SAM](https://github.com/Jn-Huang/545_project_brain_segmentation/blob/main/notebooks/segment_anything_mask_generator.ipynb) on the kaggle dataset
 
 
 
